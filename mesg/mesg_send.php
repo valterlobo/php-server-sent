@@ -19,3 +19,5 @@ $sock->send($msg);
 
 
 echo $msg;
+
+$sock->disconnect('tcp://127.0.0.1:5555');

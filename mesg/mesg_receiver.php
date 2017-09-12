@@ -1,21 +1,16 @@
 <?php
 
 $context = new ZMQContext();
+$pull = $context->getSocket(ZMQ::SOCKET_PULL);
+$pull->bind("tcp://127.0.0.1:5555");
 
-$sock = $context->getSocket(ZMQ::SOCKET_SUB);
-$sock->setSockOpt(ZMQ::SOCKOPT_SUBSCRIBE, "");
-$sock->connect("tcp://127.0.0.1:5556");
+$pub = $context->getSocket(ZMQ::SOCKET_PUB);
+$pub->bind("tcp://127.0.0.1:5050");
 
-echo "Receive"; 
 
 while (true) {
-    $msg = $sock->recv();
-    $event = json_decode($msg, true);
-    if (isset($event['type'])) {
-        echo "event: {$event['type']}\n";
-    }
-    $data = json_encode($event['data']);
-    echo "data: $data\n\n";
-    ob_flush();
-    flush();
+    $msg = $pull->recv();
+    echo "pub received message $msg\n";
+    //$msg_result = executar_tarefa($msg);
+    $pub->send($msg);
 }

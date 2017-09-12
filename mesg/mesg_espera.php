@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 // NOTA: Este código não é totalmente funcional, mas apenas um exemplo!
 
@@ -17,7 +16,6 @@ $sessionID =  session_id();
               src="https://code.jquery.com/jquery-3.2.1.min.js"
               integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
               crossorigin="anonymous"></script>
-
 
 
 
@@ -53,6 +51,9 @@ $(document).ready(function()
    //
 
    $("button").click(function(){
+
+        addListener(); 
+
         $.post("mesg_send.php",
         {
           name: "Valter Lobo",
@@ -65,6 +66,9 @@ $(document).ready(function()
 
   //Event Source 
    var uuid_session = "<?=$sessionID ?>" ; 
+/***************************************/
+
+function addListener() { 
 
   if (!!window.EventSource) {
     var source = new EventSource('mesg_stream.php');
@@ -77,13 +81,14 @@ $(document).ready(function()
     console.log(e);
     var data = JSON.parse(e.data);
     console.log(data);
-    console.log(data.data.cpf);
-     console.log(data.session);
+    console.log(data.session);
+    //console.log(data.data.cpf);
+    //console.log(data.session);
 
     if(uuid_session==data.session)
     {
        alert("Session igual " +  uuid_session   + " | " + data.session ); 
-
+       source.close();
     }else
     {
 
@@ -102,6 +107,10 @@ $(document).ready(function()
        logger.log('> Connection was closed');
     }
   }, false);
+
+} 
+
+/*********/
 
 });
 </script>

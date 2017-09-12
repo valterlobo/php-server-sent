@@ -6,6 +6,7 @@ $context = new ZMQContext();
 
 $sock = $context->getSocket(ZMQ::SOCKET_SUB);
 $sock->setSockOpt(ZMQ::SOCKOPT_SUBSCRIBE, "");
+$sock->setSockOpt(ZMQ::SOCKOPT_LINGER, 2000);
 $sock->connect("tcp://127.0.0.1:5050");
 
 
@@ -14,7 +15,7 @@ $sock->connect("tcp://127.0.0.1:5050");
  if (isset($event['type'])) {
         echo "event: {$event['type']}\n";
  }
- $data = json_encode($event['data']);
+ $data = json_encode($event);
 
 
 
@@ -48,5 +49,4 @@ $sessionID =  session_id();
 sendMsg($serverTime,  $data ,  'listernerMessage'. $sessionID);
 
 
-
-
+$sock->disconnect('tcp://127.0.0.1:5050');
